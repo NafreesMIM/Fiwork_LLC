@@ -20,8 +20,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Toggle chatbot visibility
     chatBtn.addEventListener('click', function() {
-        chatbotContainer.classList.remove('hidden');
-        chatbotContainer.classList.add('visible');
+        chatbotContainer.classList.toggle('hidden');
+        chatbotContainer.classList.toggle('visible');
+        if (chatbotContainer.classList.contains('visible')) {
+            userInput.focus();
+        }
     });
     
     closeChatBtn.addEventListener('click', function() {
@@ -77,134 +80,172 @@ document.addEventListener('DOMContentLoaded', function() {
     function scrollToBottom() {
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
-    
- // Enhanced Q&A Database
-const qaDatabase = {
-    greeting: {
-        question: /hello|hi|hey/i,
-        answer: "Hello! I'm Fiwork Design Assistant. How can I help you with your logo design today?"
-    },
-    pricing: {
-        question: /price|cost|how much/i,
-        answer: `We offer 3 packages: 
-        <br>1. Basic ($150): 3 concepts, 5 revisions
-        <br>2. Standard ($300): 5 concepts, 10 revisions
-        <br>3. Premium ($750): Unlimited concepts & revisions 
-        <br>Which package are you interested in?`
-    },
-    process: {
-        question: /process|how it works|procedure/i,
-        answer: `Our 4-step process:
-        <br>1. Share your requirements
-        <br>2. Receive initial concepts
-        <br>3. Provide feedback
-        <br>4. Get final files
-        <br>Ready to get started?`
-    },
-    files: {
-        question: /file|format|deliver|what i get/i,
-        answer: `File formats by package:
-        <br>Basic: PNG, JPG
-        <br>Standard: + EPS, PDF
-        <br>Premium: + AI/PSD, Social Kit
-        <br>Need specific formats?`
-    },
-    payment: {
-        question: /pay|payment|checkout/i,
-        answer: "We accept cards. When you're ready, I'll guide you through checkout!" 
-    },
-    revision: {
-        question: /revision|change|edit/i,
-        answer: `Revision limits:
-        <br>Basic: 5 revisions
-        <br>Standard: 10 revisions
-        <br>Premium: Unlimited
-        <br>Which package suits you?`
-    }
-};
 
-// Package-specific thank you responses
-const packageResponses = {
-    basic: {
-        question: /basic/i,
-        answer: `Thank you so much for choosing to work with me! To get started on your order, please complete the payment using the link below:
-        <br>- <strong>Basic</strong>: <a href="https://tinyurl.com/3s95u33w" target="_blank">Pay Now</a>
-        <br><br>Once your payment is complete, please email a screenshot of the transaction with the following details:
-        <br>✨ Brand Name:<br>✨ Slogan (if any):<br>✨ Brief Description of Design:<br>✨ Preferred Colors (if any):<br>✨ Industry:<br>✨ First Name:<br>✨ Last Name:<br>✨ Country:<br>✨ State:
-        <br><br>I'll get started on your project right away! Feel free to reach out if you have any questions. 😊`
-    },
-    standard: {
-        question: /standard/i,
-        answer: `Thank you so much for choosing to work with me! To get started on your order, please complete the payment using the link below:
-        <br>- <strong>Standard</strong>: <a href="https://tinyurl.com/4euet7f3" target="_blank">Pay Now</a>
-        <br><br>Once your payment is complete, please email a screenshot of the transaction with the following details:
-        <br>✨ Brand Name:<br>✨ Slogan (if any):<br>✨ Brief Description of Design:<br>✨ Preferred Colors (if any):<br>✨ Industry:<br>✨ First Name:<br>✨ Last Name:<br>✨ Country:<br>✨ State:
-        <br><br>I'll get started on your project right away! Feel free to reach out if you have any questions. 😊`
-    },
-    premium: {
-        question: /premium/i,
-        answer: `Thank you so much for choosing to work with me! To get started on your order, please complete the payment using the link below:
-        <br>- <strong>Premium</strong>: <a href="https://tinyurl.com/y4bd2ztx" target="_blank">Pay Now</a>
-        <br><br>Once your payment is complete, please email a screenshot of the transaction with the following details:
-        <br>✨ Brand Name:<br>✨ Slogan (if any):<br>✨ Brief Description of Design:<br>✨ Preferred Colors (if any):<br>✨ Industry:<br>✨ First Name:<br>✨ Last Name:<br>✨ Country:<br>✨ State:
-        <br><br>I'll get started on your project right away! Feel free to reach out if you have any questions. 😊`
-    }
-};
-
-// Final bot response function with typing effect
-function generateBotResponse(userMessage) {
-    userMessage = userMessage.toLowerCase();
-    let response = '';
-
-    // First check package-specific selection
-    for (const [key, value] of Object.entries(packageResponses)) {
-        if (value.question.test(userMessage)) {
-            response = value.answer;
-            break;
+    // Enhanced Q&A Database
+    const qaDatabase = {
+        greeting: {
+            question: /hello|hi|hey/i,
+            answer: "Hello! I'm Fiwork Design Assistant. How can I help you with your logo design today?"
+        },
+        pricing: {
+            question: /price|cost|how much/i,
+            answer: `We offer 3 packages: 
+            <br>1. Basic ($150): 3 concepts, 5 revisions
+            <br>2. Standard ($300): 5 concepts, 10 revisions
+            <br>3. Premium ($750): Unlimited concepts & revisions 
+            <br>Which package are you interested in?`
+        },
+        process: {
+            question: /process|how it works|procedure/i,
+            answer: `Our 4-step process:
+            <br>1. Share your requirements
+            <br>2. Receive initial concepts
+            <br>3. Provide feedback
+            <br>4. Get final files
+            <br>Ready to get started?`
+        },
+        files: {
+            question: /file|format|deliver|what i get/i,
+            answer: `File formats by package:
+            <br>Basic: PNG, JPG
+            <br>Standard: + EPS, PDF
+            <br>Premium: + AI/PSD, Social Kit
+            <br>Need specific formats?`
+        },
+        payment: {
+            question: /pay|payment|checkout/i,
+            answer: "We accept cards. When you're ready, I'll guide you through checkout!" 
+        },
+        revision: {
+            question: /revision|change|edit/i,
+            answer: `Revision limits:
+            <br>Basic: 5 revisions
+            <br>Standard: 10 revisions
+            <br>Premium: Unlimited
+            <br>Which package suits you?`
         }
-    }
+    };
 
-    // If not a package, check general QA
-    if (!response) {
-        for (const [key, value] of Object.entries(qaDatabase)) {
+    // Package-specific thank you responses
+    const packageResponses = {
+        basic: {
+            question: /basic/i,
+            answer: `Thank you so much for choosing to work with me! To get started on your order, please complete the payment using the link below:
+            <br>- <strong>Basic</strong>: <a href="https://tinyurl.com/3s95u33w" target="_blank">Pay Now</a>
+            <br><br>Once your payment is complete, please email a screenshot of the transaction with the following details:
+            <br>✨ Brand Name:<br>✨ Slogan (if any):<br>✨ Brief Description of Design:<br>✨ Preferred Colors (if any):<br>✨ Industry:<br>✨ First Name:<br>✨ Last Name:<br>✨ Country:<br>✨ State:
+            <br><br>I'll get started on your project right away! Feel free to reach out if you have any questions. 😊`
+        },
+        standard: {
+            question: /standard/i,
+            answer: `Thank you so much for choosing to work with me! To get started on your order, please complete the payment using the link below:
+            <br>- <strong>Standard</strong>: <a href="https://tinyurl.com/4euet7f3" target="_blank">Pay Now</a>
+            <br><br>Once your payment is complete, please email a screenshot of the transaction with the following details:
+            <br>✨ Brand Name:<br>✨ Slogan (if any):<br>✨ Brief Description of Design:<br>✨ Preferred Colors (if any):<br>✨ Industry:<br>✨ First Name:<br>✨ Last Name:<br>✨ Country:<br>✨ State:
+            <br><br>I'll get started on your project right away! Feel free to reach out if you have any questions. 😊`
+        },
+        premium: {
+            question: /premium/i,
+            answer: `Thank you so much for choosing to work with me! To get started on your order, please complete the payment using the link below:
+            <br>- <strong>Premium</strong>: <a href="https://tinyurl.com/y4bd2ztx" target="_blank">Pay Now</a>
+            <br><br>Once your payment is complete, please email a screenshot of the transaction with the following details:
+            <br>✨ Brand Name:<br>✨ Slogan (if any):<br>✨ Brief Description of Design:<br>✨ Preferred Colors (if any):<br>✨ Industry:<br>✨ First Name:<br>✨ Last Name:<br>✨ Country:<br>✨ State:
+            <br><br>I'll get started on your project right away! Feel free to reach out if you have any questions. 😊`
+        }
+    };
+
+    function generateBotResponse(userMessage) {
+        userMessage = userMessage.toLowerCase();
+        let response = '';
+
+        // First check package-specific selection
+        for (const [key, value] of Object.entries(packageResponses)) {
             if (value.question.test(userMessage)) {
                 response = value.answer;
                 break;
             }
         }
+
+        // If not a package, check general QA
+        if (!response) {
+            for (const [key, value] of Object.entries(qaDatabase)) {
+                if (value.question.test(userMessage)) {
+                    response = value.answer;
+                    break;
+                }
+            }
+        }
+
+        // Default fallback
+        if (!response) {
+            response = `I can help with:
+            <br>- Pricing & packages
+            <br>- Design process
+            <br>- File formats
+            <br>- Revision policies
+            <br>- Payment options
+            <br>What would you like to know?`;
+        }
+
+        // Typing indicator logic
+        const typingIndicator = document.createElement('div');
+        typingIndicator.className = 'bot-message';
+        typingIndicator.innerHTML = `
+            <img src="images/fiwork-logo.png" alt="Fiwork Bot" class="bot-avatar">
+            <div class="message-content">
+                <p class="typing-indicator"><span>.</span><span>.</span><span>.</span></p>
+            </div>
+        `;
+        chatMessages.appendChild(typingIndicator);
+        scrollToBottom();
+
+        setTimeout(() => {
+            chatMessages.removeChild(typingIndicator);
+            addBotMessage(response);
+        }, 1500);
     }
 
-    // Default fallback
-    if (!response) {
-        response = `I can help with:
-        <br>- Pricing & packages
-        <br>- Design process
-        <br>- File formats
-        <br>- Revision policies
-        <br>- Payment options
-        <br>What would you like to know?`;
+     function isInViewport(element) {
+        const rect = element.getBoundingClientRect();
+        return (
+            rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.75 &&
+            rect.bottom >= 0
+        );
     }
 
-    // Typing indicator logic
-    const typingIndicator = document.createElement('div');
-    typingIndicator.className = 'bot-message';
-    typingIndicator.innerHTML = `
-        <img src="images/fiwork-logo.png" alt="Fiwork Bot" class="bot-avatar">
-        <div class="message-content">
-            <p class="typing-indicator"><span>.</span><span>.</span><span>.</span></p>
-        </div>
-    `;
-    chatMessages.appendChild(typingIndicator);
-    scrollToBottom();
+    // Function to handle scroll animations
+    function handleScrollAnimations() {
+        const serviceCards = document.querySelectorAll('.service-card');
+        const pricingCards = document.querySelectorAll('.pricing-card');
+        
+        serviceCards.forEach(card => {
+            if (isInViewport(card)) {
+                card.classList.add('animate');
+            } else {
+                card.classList.remove('animate');
+            }
+        });
+        
+        pricingCards.forEach(card => {
+            if (isInViewport(card)) {
+                card.classList.add('animate');
+            } else {
+                card.classList.remove('animate');
+            }
+        });
+    }
 
-    setTimeout(() => {
-        chatMessages.removeChild(typingIndicator);
-        addBotMessage(response);
-    }, 1500);
-}
+    // Initial check on load
+    handleScrollAnimations();
 
-
-
+    // Throttle scroll events for performance
+    let isScrolling;
+    window.addEventListener('scroll', function() {
+        window.clearTimeout(isScrolling);
+        isScrolling = setTimeout(function() {
+            handleScrollAnimations();
+        }, 50);
+    }, false);
     
     function initPortfolio() {
         const portfolioGrid = document.getElementById('portfolio-grid');
@@ -225,10 +266,35 @@ function generateBotResponse(userMessage) {
     // Contact form submission
     const contactForm = document.getElementById('contact-form');
     if (contactForm) {
-        contactForm.addEventListener('submit', function(e) {
+        contactForm.addEventListener('submit', async function(e) {
             e.preventDefault();
-            alert('Thank you for your message! We will get back to you soon.');
-            this.reset();
+            const formMessage = document.getElementById('form-message');
+            const formData = new FormData(this);
+            
+            try {
+                const response = await fetch('/contact', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(Object.fromEntries(formData))
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    formMessage.textContent = 'Thank you! Your message has been sent.';
+                    formMessage.className = 'form-message success';
+                    this.reset();
+                } else {
+                    formMessage.textContent = 'Error: ' + data.message;
+                    formMessage.className = 'form-message error';
+                }
+            } catch (error) {
+                formMessage.textContent = 'Error sending message. Please try again later.';
+                formMessage.className = 'form-message error';
+                console.error('Error:', error);
+            }
         });
     }
     
@@ -244,6 +310,12 @@ function generateBotResponse(userMessage) {
                     top: targetElement.offsetTop - 80,
                     behavior: 'smooth'
                 });
+                
+                // Close mobile menu if open
+                if (window.innerWidth <= 768) {
+                    chatbotContainer.classList.remove('visible');
+                    chatbotContainer.classList.add('hidden');
+                }
             }
         });
     });

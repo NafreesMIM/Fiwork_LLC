@@ -1,4 +1,3 @@
-
 /* Global Styles */
 :root {
     --primary-color: #4a6bff;
@@ -23,6 +22,7 @@ body {
     line-height: 1.6;
     color: var(--dark-color);
     background-color: #fff;
+    padding-top: 80px;
 }
 
 a {
@@ -96,7 +96,7 @@ nav ul li a:hover {
 .hero {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    padding: 150px 0 100px;
+    padding: 100px 0;
     text-align: center;
 }
 
@@ -175,6 +175,7 @@ nav ul li a:hover {
     color: white;
     font-size: 1.2rem;
     cursor: pointer;
+    padding: 5px;
 }
 
 .chat-messages {
@@ -220,6 +221,24 @@ nav ul li a:hover {
     color: white;
     padding: 10px 15px;
     border-radius: 15px 15px 0 15px;
+}
+
+.typing-indicator span {
+    display: inline-block;
+    animation: bounce 1.5s infinite ease-in-out;
+}
+
+.typing-indicator span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.typing-indicator span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
 }
 
 .chat-input {
@@ -299,6 +318,32 @@ nav ul li a:hover {
     font-size: 1.5rem;
 }
 
+/* Animation classes */
+.service-card, .pricing-card {
+    will-change: opacity, transform;
+}
+
+.service-card, .pricing-card {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.service-card.animate, .pricing-card.animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Staggered animations for cards */
+.service-card:nth-child(1) { transition-delay: 0.1s; }
+.service-card:nth-child(2) { transition-delay: 0.2s; }
+.service-card:nth-child(3) { transition-delay: 0.3s; }
+.service-card:nth-child(4) { transition-delay: 0.4s; }
+
+.pricing-card:nth-child(1) { transition-delay: 0.1s; }
+.pricing-card:nth-child(2) { transition-delay: 0.2s; }
+.pricing-card:nth-child(3) { transition-delay: 0.3s; }
+
 /* Portfolio Section */
 .portfolio {
     padding: 80px 0;
@@ -363,9 +408,6 @@ nav ul li a:hover {
     padding: 15px;
     transform: translateY(100%);
     transition: transform 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .portfolio-item:hover .portfolio-overlay {
@@ -433,7 +475,6 @@ nav ul li a:hover {
 .pricing-card:hover {
     transform: translateY(-10px) scale(1.03);
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-    z-index: 2
 }
 
 .pricing-card.featured {
@@ -511,7 +552,6 @@ nav ul li a:hover {
     background-color: #3a5bd9;
     transform: scale(1.05);
 }
-
 
 /* Contact Section */
 .contact {
@@ -607,6 +647,25 @@ nav ul li a:hover {
     background-color: #3a5bd9;
 }
 
+.form-message {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    display: none;
+}
+
+.form-message.success {
+    background-color: #d4edda;
+    color: #155724;
+    display: block;
+}
+
+.form-message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    display: block;
+}
+
 /* Footer */
 footer {
     background-color: var(--dark-color);
@@ -627,133 +686,137 @@ footer {
     height: 80px;
 }
 
-/* Responsive Enhancements*/
-
+/* Responsive Styles */
+/* Mobile Navbar */
 @media (max-width: 768px) {
-  header .container {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  nav ul {
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .hero {
-    padding: 100px 0;
-  }
-
-  .hero-content h2 {
-    font-size: 2rem;
-  }
-
-  .hero-content p {
-    font-size: 1rem;
-    padding: 0 10px;
-  }
-
-  .service-cards,
-  .pricing-cards,
-  .contact-container {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .pricing-card,
-  .service-card,
-  .contact-form,
-  .contact-info {
-    width: 90%;
-    max-width: 400px;
-  }
-
-  .chatbot-container {
-    width: 100%;
-    height: 70vh;
-    bottom: 0;
-    right: 0;
-    border-radius: 15px 15px 0 0;
-    z-index: 999;
-  }
-
-  .instagram-button {
-    position: relative;
-    z-index: 1001;
-  }
+    header {
+        padding: 10px 0;
+    }
+    
+    header .container {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 15px;
+    }
+    
+    nav {
+        position: fixed;
+        top: 80px;
+        left: 0;
+        width: 100%;
+        background-color: white;
+        box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+        transform: translateY(-150%);
+        transition: transform 0.3s ease;
+        z-index: 999;
+    }
+    
+    nav.active {
+        transform: translateY(0);
+    }
+    
+    nav ul {
+        flex-direction: column;
+        gap: 0;
+        padding: 15px 0;
+    }
+    
+    nav ul li {
+        padding: 10px 20px;
+    }
+    
+    nav ul li a {
+        display: block;
+    }
+    
+    /* Mobile Menu Toggle Button */
+    .mobile-menu-toggle {
+        display: block;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: var(--primary-color);
+        cursor: pointer;
+    }
+    
+    /* Chatbot Mobile Styling */
+    .chatbot-container {
+        width: 100%;
+        height: 80vh;
+        bottom: 0;
+        right: 0;
+        border-radius: 15px 15px 0 0;
+    }
+    
+    /* Fix button tap targets */
+    button, .package-btn, .cta-button {
+        min-width: 44px;
+        min-height: 44px;
+    }
+    
+    /* Hero button spacing */
+    .hero-content {
+        padding: 0 15px;
+    }
 }
 
-@media (max-width: 480px) {
-  header .container {
-    padding: 10px;
-  }
-
-  .cta-button {
-    font-size: 1rem;
-    padding: 10px 20px;
-  }
-
-  .portfolio-grid {
-    grid-template-columns: 1fr;
-    padding: 0 10px;
-  }
-
-  .chat-input input {
-    font-size: 0.85rem;
-  }
-
-  .chat-input button {
-    width: 35px;
-    height: 35px;
-  }
-
-  .pricing-card ul li {
-    font-size: 0.95rem;
-  }
-
-  .package-btn {
-    font-size: 0.95rem;
-  }
+/* Mobile Menu Toggle Button (hidden by default) */
+.mobile-menu-toggle {
+    display: none;
 }
 
-/* Fix button visibility on mobile */
-button, .package-btn, .cta-button {
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-  user-select: none;
+/* Button hover state fixes for mobile */
+@media (hover: none) {
+    button:hover, .package-btn:hover, .cta-button:hover {
+        transform: none !important;
+    }
 }
 
-/* Improve tap targets */
-a, button, input, textarea {
-  padding: 0.75rem;
-  font-size: 1rem;
-}
-
-/* Ensure chat toggle button works on mobile */
-#start-chat-btn {
-  z-index: 1002;
-  position: relative;
-}
-
-/* Ensure chatbot visibility toggle works */
+/* Chatbot visibility toggle */
 .chatbot-container.hidden {
-  display: none !important;
+    display: none;
 }
 
 .chatbot-container.visible {
-  display: flex !important;
+    display: flex;
 }
 
-/* Smooth transition for buttons */
-button:hover, .package-btn:hover, .cta-button:hover {
-  opacity: 0.9;
-  transform: scale(1.03);
+/* Prevent body scrolling when chatbot is open */
+body.chatbot-open {
+    overflow: hidden;
 }
 
-/* Ensure full-width support on small devices */
-.container {
-  width: 100%;
-  padding: 0 15px;
-  box-sizing: border-box;
+@media (max-width: 480px) {
+    .cta-button {
+        font-size: 1rem;
+        padding: 10px 20px;
+    }
+
+    .chat-input input {
+        font-size: 0.85rem;
+    }
+
+    .chat-input button {
+        width: 35px;
+        height: 35px;
+    }
+
+    .pricing-card ul li {
+        font-size: 0.95rem;
+    }
+
+    .package-btn {
+        font-size: 0.95rem;
+    }
+}
+
+/* Animation for chat messages */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.bot-message, .user-message {
+    animation: fadeIn 0.3s ease-out;
 }
