@@ -81,18 +81,20 @@ document.addEventListener('DOMContentLoaded', function() {
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
-    // Enhanced Q&A Database
+    // Enhanced Q&A Database with updated pricing
     const qaDatabase = {
         greeting: {
             question: /hello|hi|hey/i,
             answer: "Hello! I'm Fiwork Design Assistant. How can I help you with your logo design today?"
         },
         pricing: {
-            question: /price|cost|how much/i,
-            answer: `We offer 3 packages: 
-            <br>1. Basic ($150): 3 concepts, 5 revisions
-            <br>2. Standard ($300): 5 concepts, 10 revisions
-            <br>3. Premium ($750): Unlimited concepts & revisions 
+            question: /price|cost|how much|packages|options/i,
+            answer: `We offer 5 packages: 
+            <br>1. <strong>Basic ($150)</strong>: 3 concepts, 5 revisions
+            <br>2. <strong>Standard ($300)</strong>: 5 concepts, 10 revisions
+            <br>3. <strong>Business ($500)</strong>: 7 concepts, 15 revisions
+            <br>4. <strong>Premium ($750)</strong>: Unlimited concepts & revisions
+            <br>5. <strong>Full Branding ($750)</strong>: Complete branding solution
             <br>Which package are you interested in?`
         },
         process: {
@@ -105,31 +107,42 @@ document.addEventListener('DOMContentLoaded', function() {
             <br>Ready to get started?`
         },
         files: {
-            question: /file|format|deliver|what i get/i,
+            question: /file|format|deliver|what i get|receive/i,
             answer: `File formats by package:
             <br>Basic: PNG, JPG
             <br>Standard: + EPS, PDF
-            <br>Premium: + AI/PSD, Social Kit
+            <br>Business: + AI/PSD
+            <br>Premium: + Social Kit, Stationery Designs
+            <br>Full Branding: Everything including Brand Guidelines, Packaging, etc.
             <br>Need specific formats?`
         },
         payment: {
-            question: /pay|payment|checkout/i,
+            question: /pay|payment|checkout|order|purchase/i,
             answer: "We accept cards. When you're ready, I'll guide you through checkout!" 
         },
         revision: {
-            question: /revision|change|edit/i,
+            question: /revision|change|edit|modify|adjust/i,
             answer: `Revision limits:
             <br>Basic: 5 revisions
             <br>Standard: 10 revisions
+            <br>Business: 15 revisions
             <br>Premium: Unlimited
+            <br>Full Branding: Unlimited
             <br>Which package suits you?`
+        },
+        delivery: {
+            question: /time|delivery|how long|duration|process time/i,
+            answer: `Delivery timeline:
+            <br>All packages: 3-7 days process time
+            <br>Premium & Full Branding: Priority processing
+            <br>Need something faster? Let me know!`
         }
     };
 
     // Package-specific thank you responses
     const packageResponses = {
         basic: {
-            question: /basic/i,
+            question: /basic|150|one fifty/i,
             answer: `Thank you so much for choosing to work with me! To get started on your order, please complete the payment using the link below:
             <br>- <strong>Basic</strong>: <a href="https://tinyurl.com/3s95u33w" target="_blank">Pay Now</a>
             <br><br>Once your payment is complete, please email a screenshot of the transaction with the following details:
@@ -137,17 +150,33 @@ document.addEventListener('DOMContentLoaded', function() {
             <br><br>I'll get started on your project right away! Feel free to reach out if you have any questions. 😊`
         },
         standard: {
-            question: /standard/i,
+            question: /standard|300|three hundred/i,
             answer: `Thank you so much for choosing to work with me! To get started on your order, please complete the payment using the link below:
             <br>- <strong>Standard</strong>: <a href="https://tinyurl.com/4euet7f3" target="_blank">Pay Now</a>
             <br><br>Once your payment is complete, please email a screenshot of the transaction with the following details:
             <br>✨ Brand Name:<br>✨ Slogan (if any):<br>✨ Brief Description of Design:<br>✨ Preferred Colors (if any):<br>✨ Industry:<br>✨ First Name:<br>✨ Last Name:<br>✨ Country:<br>✨ State:
             <br><br>I'll get started on your project right away! Feel free to reach out if you have any questions. 😊`
         },
+        business: {
+            question: /business|500|five hundred/i,
+            answer: `Thank you so much for choosing to work with me! To get started on your order, please complete the payment using the link below:
+            <br>- <strong>Business</strong>: <a href="https://tinyurl.com/bddmksee" target="_blank">Pay Now</a>
+            <br><br>Once your payment is complete, please email a screenshot of the transaction with the following details:
+            <br>✨ Brand Name:<br>✨ Slogan (if any):<br>✨ Brief Description of Design:<br>✨ Preferred Colors (if any):<br>✨ Industry:<br>✨ First Name:<br>✨ Last Name:<br>✨ Country:<br>✨ State:
+            <br><br>I'll get started on your project right away! Feel free to reach out if you have any questions. 😊`
+        },
         premium: {
-            question: /premium/i,
+            question: /premium|750|seven fifty|unlimited/i,
             answer: `Thank you so much for choosing to work with me! To get started on your order, please complete the payment using the link below:
             <br>- <strong>Premium</strong>: <a href="https://tinyurl.com/y4bd2ztx" target="_blank">Pay Now</a>
+            <br><br>Once your payment is complete, please email a screenshot of the transaction with the following details:
+            <br>✨ Brand Name:<br>✨ Slogan (if any):<br>✨ Brief Description of Design:<br>✨ Preferred Colors (if any):<br>✨ Industry:<br>✨ First Name:<br>✨ Last Name:<br>✨ Country:<br>✨ State:
+            <br><br>I'll get started on your project right away! Feel free to reach out if you have any questions. 😊`
+        },
+        fullBranding: {
+            question: /full branding|complete branding|branding solution|everything/i,
+            answer: `Thank you so much for choosing to work with me! To get started on your order, please complete the payment using the link below:
+            <br>- <strong>Full Branding</strong>: <a href="#" target="_blank">Pay Now</a>
             <br><br>Once your payment is complete, please email a screenshot of the transaction with the following details:
             <br>✨ Brand Name:<br>✨ Slogan (if any):<br>✨ Brief Description of Design:<br>✨ Preferred Colors (if any):<br>✨ Industry:<br>✨ First Name:<br>✨ Last Name:<br>✨ Country:<br>✨ State:
             <br><br>I'll get started on your project right away! Feel free to reach out if you have any questions. 😊`
@@ -179,7 +208,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Default fallback
         if (!response) {
             response = `I can help with:
-            <br>- Pricing & packages
+            <br>- Pricing & packages (Basic, Standard, Business, Premium, Full Branding)
             <br>- Design process
             <br>- File formats
             <br>- Revision policies
